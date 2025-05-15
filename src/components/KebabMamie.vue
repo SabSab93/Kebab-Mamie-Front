@@ -5,7 +5,6 @@
       <h1>Kebab de Mamie</h1>
       <p v-if="error" class="error">{{ error }}</p>
       <p v-else-if="loading">Chargement…</p>
-      <button v-else class="btn-order">Commander maintenant</button>
     </header>
 
     <section class="menu" v-if="!loading && !error">
