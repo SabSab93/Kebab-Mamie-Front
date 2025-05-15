@@ -46,15 +46,17 @@ const error = ref<string | null>(null)
 // URL de ton API Render
 const API_URL = 'https://kebab-mamie.onrender.com/kebabs'
 
+
 onMounted(async () => {
+  console.log('Fetch →', API_URL)
   try {
     const res = await fetch(API_URL)
-    if (!res.ok) {
-      throw new Error(`Erreur ${res.status} : ${res.statusText}`)
-    }
+    console.log('Status:', res.status)
+    if (!res.ok) throw new Error(`Erreur ${res.status}`)
     menu.value = await res.json()
-  } catch (e: any) {
-    error.value = e.message || 'Erreur réseau'
+  } catch (e) {
+    console.error(e)
+    error.value = (e as Error).message
   } finally {
     loading.value = false
   }
