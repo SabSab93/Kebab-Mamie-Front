@@ -11,7 +11,10 @@
       <h2>Notre Menu</h2>
       <ul class="menu-list">
         <li v-for="item in menu" :key="item.id" class="menu-item">
-          <img :src="item.img" :alt="item.name" />
+          <img
+  :src="`${import.meta.env.API_URL}${item.img}`"
+  :alt="item.name"
+/>
           <div class="info">
             <h3>{{ item.name }}</h3>
             <p>{{ item.description }}</p>
