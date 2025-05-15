@@ -1,20 +1,21 @@
-<!-- src/components/KebabDeMamie.vue -->
+
 <template>
   <div class="kebab-page">
     <header class="hero">
       <h1>Kebab de Mamie</h1>
-      <p>Le meilleur kebab fait maison, comme chez grand-ma !</p>
-      <button class="btn-order">Commander maintenant</button>
+      <p v-if="error" class="error">{{ error }}</p>
+      <p v-else-if="loading">Chargement…</p>
+      <button v-else class="btn-order">Commander maintenant</button>
     </header>
 
-    <section class="menu">
+    <section class="menu" v-if="!loading && !error">
       <h2>Notre Menu</h2>
       <ul class="menu-list">
         <li v-for="item in menu" :key="item.id" class="menu-item">
           <img :src="item.img" :alt="item.name" />
           <div class="info">
             <h3>{{ item.name }}</h3>
-            <p>{{ item.desc }}</p>
+            <p>{{ item.description }}</p>
             <span class="price">{{ item.price }} €</span>
           </div>
         </li>
@@ -27,14 +28,37 @@
   </div>
 </template>
 
-<script setup>
-import { reactive } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
 
-const menu = reactive([
-  { id: 1, name: 'Classic Kebab', desc: 'Viande d’agneau, légumes frais, sauce blanche maison', price: 8.5, img: '/images/kebab1.jpg' },
-  { id: 2, name: 'Kebab Poulet', desc: 'Poulet grillé, crudités croquantes, sauce moutarde douce', price: 8.0, img: '/images/kebab2.jpg' },
-  { id: 3, name: 'Végé Kebab', desc: 'Falafels croustillants, houmous, salade, sauce citronnée', price: 7.5, img: '/images/kebab3.jpg' },
-])
+interface Kebab {
+  id: number
+  name: string
+  description: string
+  price: number
+  img: string
+}
+
+const menu = ref<Kebab[]>([])
+const loading = ref(true)
+const error = ref<string | null>(null)
+
+// URL de ton API Render
+const API_URL = 'https://kebab-mamie.onrender.com/kebabs'
+
+onMounted(async () => {
+  try {
+    const res = await fetch(API_URL)
+    if (!res.ok) {
+      throw new Error(`Erreur ${res.status} : ${res.statusText}`)
+    }
+    menu.value = await res.json()
+  } catch (e: any) {
+    error.value = e.message || 'Erreur réseau'
+  } finally {
+    loading.value = false
+  }
+})
 </script>
 
 <style scoped>
@@ -68,9 +92,9 @@ const menu = reactive([
   margin-bottom: 0.5rem;
 }
 
-.hero p {
-  font-size: 1.2rem;
-  margin-bottom: 1.5rem;
+.error {
+  color: #f55;
+  margin-bottom: 1rem;
 }
 
 .btn-order {
