@@ -44,7 +44,7 @@ const loading = ref(true)
 const error = ref<string | null>(null)
 
 // URL de ton API Render
-const API_URL = 'https://kebab-mamie.onrender.com/kebabs'
+const API_URL = 'https://kebab-mamie.onrender.com/'
 
 
 onMounted(async () => {
