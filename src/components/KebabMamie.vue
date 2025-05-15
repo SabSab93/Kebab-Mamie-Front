@@ -50,10 +50,8 @@ const menu = reactive([
 }
 
 .kebab-page {
-  font-family: 'Comfortaa', cursive;
-  color: var(--text);
-  background-color: var(--bg);
-  min-height: 100vh;
+  width: 100%;
+  flex: 1;
   display: flex;
   flex-direction: column;
 }
